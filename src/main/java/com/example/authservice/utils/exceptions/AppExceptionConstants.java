@@ -4,7 +4,7 @@ public final class AppExceptionConstants {
 
     // Auth Exception
     public static final String BAD_LOGIN_CREDENTIALS = "Bad Credentials - Invalid username or password";
-    public static final String ACCOUNT_NOT_ACTIVATED = "Account not activated - Please verify your email or reprocess verification using forgot-password.";
+    public static final String PASSWORD_POLICY = "Password does not meet policy criteria.";
 
     public static final String UNAUTHORIZED_ACCESS = "Insufficient authorization access";
 

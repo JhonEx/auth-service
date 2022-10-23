@@ -9,6 +9,7 @@ import com.example.authservice.service.auth.dtos.AuthResponseDTO;
 import com.example.authservice.service.auth.dtos.LoginRequestDTO;
 import com.example.authservice.service.auth.dtos.RegisterUserRequestDTO;
 import com.example.authservice.service.auth.dtos.UserDTO;
+import com.example.authservice.utils.PasswordValidator;
 import com.example.authservice.utils.exceptions.AppExceptionConstants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final PasswordValidator passwordValidator;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -68,11 +70,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserDTO createUser(RegisterUserRequestDTO registerUserRequestDTO) {
+        if(!PasswordValidator.isValid(registerUserRequestDTO.getPassword())){
+            throw new BadCredentialsException(AppExceptionConstants.PASSWORD_POLICY);
+        }
         List<Phone> phoneList = new ArrayList<>();
 
         User user = new User();
         user.setUsername(registerUserRequestDTO.getEmail());
         user.setName(registerUserRequestDTO.getFullName());
+
         user.setPassword(passwordEncoder.encode(registerUserRequestDTO.getPassword()));
         user.setRoles(Set.of(UserRole.USER_ROLE));
 

@@ -32,3 +32,6 @@ app:
       secret-key: ${JWT_SECRET_KEY:swa-proj1-jwt-secret}
       expire-seconds: 86400
 
+
+password:
+  length: 10
