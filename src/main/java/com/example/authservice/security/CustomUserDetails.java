@@ -1,6 +1,7 @@
 package com.example.authservice.security;
 
 import com.example.authservice.security.enums.UserRole;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-    private final Long id;
+    private final String id;
 
     private final String username;
 
@@ -23,8 +24,12 @@ public class CustomUserDetails implements UserDetails {
 
     private final Set<UserRole> userRoles;
 
+    private final Boolean isActive;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         Collection<GrantedAuthority> authorities = new HashSet<>();
         for (UserRole role : this.userRoles) {
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.name());
@@ -42,6 +47,8 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return this.username;
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {

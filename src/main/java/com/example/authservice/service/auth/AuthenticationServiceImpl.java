@@ -22,8 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+
 import java.util.*;
 
 @Service
@@ -33,15 +32,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
-    private final PasswordValidator passwordValidator;
-
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public AuthResponseDTO loginUser(LoginRequestDTO loginRequest) {
 
         try {
-
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             String token = jwtTokenProvider.createToken(authentication);
             AuthResponseDTO authResponseDTO = new AuthResponseDTO();
@@ -51,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return authResponseDTO;
         } catch (AuthenticationException e) {
-            throw new BadCredentialsException(AppExceptionConstants.BAD_LOGIN_CREDENTIALS);
+            throw new BadCredentialsException(e.getMessage());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -104,5 +100,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return userDTO;
     }
-
 }

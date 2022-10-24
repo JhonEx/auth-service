@@ -1,7 +1,7 @@
 package com.example.authservice.security.enums;
 
 public enum UserRole {
-    USER_ROLE("ROLE_ADMIN"), ROLE_RECRUITER("ROLE_USER");
+    USER_ADMIN("ROLE_ADMIN"), USER_ROLE("ROLE_USER");
     private String value;
 
     UserRole(String value) {

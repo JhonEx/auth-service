@@ -29,8 +29,8 @@ public class AppSecurityUtils {
         return null;
     }
 
-    public static Optional<Long> getCurrentUserId() {
-        Optional<Long> optionalUserId = Optional.ofNullable(getCurrentUserPrinciple())
+    public static Optional<String> getCurrentUserId() {
+        Optional<String> optionalUserId = Optional.ofNullable(getCurrentUserPrinciple())
                 .map(customUserDetails -> customUserDetails.getId());
         return optionalUserId;
     }

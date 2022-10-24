@@ -5,6 +5,7 @@ import com.example.authservice.security.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -19,13 +20,13 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-//    @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
-//    @Column(name = "ID")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "ID")
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Phone> phone;
@@ -69,11 +70,11 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

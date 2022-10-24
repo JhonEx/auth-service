@@ -77,12 +77,12 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        Long userId = Long.valueOf(String.valueOf(body.get("userId")));
+        String userId = String.valueOf(body.get("userId"));
         String username = ((String) body.get("username"));
         ObjectMapper objectMapper = new ObjectMapper();
         Set<String> stringRoles = objectMapper.readValue(body.get("roles").toString(), Set.class);
         Set<UserRole> userRolesSet = AppSecurityUtils.convertStringRolesSetToEnumSet(stringRoles);
-        CustomUserDetails customUserDetails = new CustomUserDetails(userId, username, null, userRolesSet);
+        CustomUserDetails customUserDetails = new CustomUserDetails(userId, username, null, userRolesSet, null);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
         return authentication;

@@ -2,6 +2,7 @@ package com.example.authservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -10,9 +11,13 @@ import javax.persistence.*;
 @Entity
 public class Phone {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long phoneId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @Column(name = "ID")
+    private String phoneId;
 
     @ManyToOne
     private User user;
@@ -22,11 +27,11 @@ public class Phone {
     private String countryCode;
 
     @JsonIgnore
-    public Long getPhoneId() {
+    public String getPhoneId() {
         return phoneId;
     }
 
-    public void setPhoneId(Long id) {
+    public void setPhoneId(String id) {
         this.phoneId = id;
     }
 

@@ -11,7 +11,7 @@ public final class AppExceptionConstants {
     // User Exception
     public static final String USER_RECORD_NOT_FOUND = "Email already registered";
     public static final String USER_RECORD_FOUND = "User already exists";
-    public static final String USER_EMAIL_NOT_AVAILABLE = "This email isn't available";
+    public static final String USER_EMAIL_NOT_AVAILABLE = "This email isn't activated yet";
     public static final String OLD_PASSWORD_DOESNT_MATCH = "Old and New Password doesn't match";
     public static final String MATCHING_VERIFICATION_RECORD_NOT_FOUND = "Provided verification request doesn't seems correct";
     public static final String INVALID_PASSWORD_RESET_REQUEST = "Provided Password reset request doesn't seems correct";

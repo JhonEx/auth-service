@@ -4,18 +4,6 @@ server:
 spring:
   application:
     name: auth-service
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://${MYSQL_URL:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB_NAME:auth-db}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
-#    username: ${MYSQL_USERNAME:root}
-#    password: ${MYSQL_PASSWORD:root}
-#    hikari:
-#      initialization-fail-timeout: 0
-#  jpa:
-#    generate-ddl: true
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
 
   h2:
     console:
@@ -32,6 +20,3 @@ app:
       secret-key: ${JWT_SECRET_KEY:swa-proj1-jwt-secret}
       expire-seconds: 86400
 
-
-password:
-  length: 10
