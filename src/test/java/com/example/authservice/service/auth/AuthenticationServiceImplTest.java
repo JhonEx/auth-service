@@ -38,18 +38,11 @@ public class AuthenticationServiceImplTest {
     @Mock
     private JwtTokenProvider jwtTokenProvider;
 
-    @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
 
     private String email = "user@email.com";
     private String password = "password";
-
 
     @BeforeEach()
     public void setUp() {

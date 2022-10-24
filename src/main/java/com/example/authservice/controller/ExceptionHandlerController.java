@@ -1,6 +1,7 @@
 package com.example.authservice.controller;
 
 import com.example.authservice.utils.GenericResponseDTO;
+import com.example.authservice.utils.exceptions.AppExceptionConstants;
 import com.example.authservice.utils.exceptions.CustomAppException;
 import com.example.authservice.utils.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
 
-        GenericResponseDTO<String> genericResponseDTO = new GenericResponseDTO<>(ex.getMessage());
+        GenericResponseDTO<String> genericResponseDTO = new GenericResponseDTO<>(AppExceptionConstants.INVALID_EMAIL_FORMAT);
         return new ResponseEntity<>(genericResponseDTO, status);
     }
 

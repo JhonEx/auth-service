@@ -9,7 +9,7 @@ public final class AppExceptionConstants {
     public static final String UNAUTHORIZED_ACCESS = "Insufficient authorization access";
 
     // User Exception
-    public static final String USER_RECORD_NOT_FOUND = "Email already registered";
+    public static final String INVALID_EMAIL_FORMAT = "Email entered is not a valid email format";
     public static final String USER_RECORD_FOUND = "User already exists";
     public static final String USER_EMAIL_NOT_AVAILABLE = "This email isn't activated yet";
     public static final String OLD_PASSWORD_DOESNT_MATCH = "Old and New Password doesn't match";
