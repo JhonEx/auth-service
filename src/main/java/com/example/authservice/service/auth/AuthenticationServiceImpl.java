@@ -4,6 +4,7 @@ import com.example.authservice.entities.Phone;
 import com.example.authservice.entities.User;
 import com.example.authservice.repo.UserRepository;
 import com.example.authservice.security.JwtTokenProvider;
+import com.example.authservice.security.CustomUserDetails;
 import com.example.authservice.security.enums.UserRole;
 import com.example.authservice.service.auth.dtos.AuthResponseDTO;
 import com.example.authservice.service.auth.dtos.LoginRequestDTO;
@@ -18,7 +19,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +51,56 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public AuthResponseDTO loginForToken(LoginRequestDTO loginRequest) {
+        // same implementation as loginUser but without modifying the user record
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            String token = jwtTokenProvider.createToken(authentication);
+            AuthResponseDTO authResponseDTO = new AuthResponseDTO();
+            authResponseDTO.setToken(token);
+            return authResponseDTO;
+        } catch (AuthenticationException e) {
+            throw new BadCredentialsException(e.getMessage());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public AuthResponseDTO refreshToken() {
+        // fetch authenticated user from security context
+        Authentication authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new BadCredentialsException(AppExceptionConstants.UNAUTHORIZED_ACCESS);
+        }
+        try {
+            String token = jwtTokenProvider.createToken(authentication);
+            AuthResponseDTO responseDTO = new AuthResponseDTO();
+            responseDTO.setToken(token);
+
+            // update record with new token if possible
+            if (authentication.getPrincipal() instanceof CustomUserDetails) {
+                CustomUserDetails details = (CustomUserDetails) authentication.getPrincipal();
+                userRecord(details.getUsername(), token);
+            }
+            return responseDTO;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public java.util.List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (User user : users) {
+            userDTOList.add(mapUserToUserDTO(user));
+        }
+        return userDTOList;
     }
 
     public void userRecord(String email, String token){
