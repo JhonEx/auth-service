@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,13 @@ public class AuthenticationController {
         return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
     }
 
+    @PostMapping("/login-for-token")
+    public ResponseEntity<?> loginForToken(@RequestBody LoginRequestDTO loginRequest) {
+        log.info("Authentication API: login-for-token requested by user: {}", loginRequest.getUsername());
+        AuthResponseDTO authResponseDTO = authenticationService.loginForToken(loginRequest);
+        return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
+    }
+
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@Valid @RequestBody RegisterUserRequestDTO registerUserRequestDTO) {
         log.info("Authentication API: createUser: ", registerUserRequestDTO.getEmail());
@@ -45,5 +53,17 @@ public class AuthenticationController {
             throw new BadRequestException(AppExceptionConstants.USER_RECORD_FOUND);
         }
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken() {
+        AuthResponseDTO authResponseDTO = authenticationService.refreshToken();
+        return new ResponseEntity<>(authResponseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<?> getAllUsers() {
+        List<UserDTO> users = authenticationService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
