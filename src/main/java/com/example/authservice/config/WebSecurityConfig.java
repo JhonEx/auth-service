@@ -6,6 +6,7 @@ import com.example.authservice.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -45,22 +46,32 @@ public class WebSecurityConfig {
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-
-        return http.headers().frameOptions().sameOrigin().and().csrf().disable().httpBasic().and()
+        return http
+                .headers().frameOptions().sameOrigin().and()    // for H2 console
+                .csrf().disable()
+                .httpBasic().and()
                 .authorizeRequests(ar -> ar
-                        .antMatchers("/auth/**").permitAll()
-                        .antMatchers("/h2-console/**").permitAll() //to access H2 memory
+                        // only allow unauthenticated access to login
+                        .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        // still allow H2 console without auth
+                        .antMatchers("/h2-console/**").permitAll()
+                        // everything else requires a valid JWT
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(eh -> eh
-                        .authenticationEntryPoint((request, response, authException) ->
-                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()))
+                        .authenticationEntryPoint((req, rsp, ex) ->
+                                rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage()))
                 )
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider()), UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sm -> sm
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .addFilterBefore(
+                        new JwtTokenFilter(jwtTokenProvider()),
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .build();
     }
+
 
     @Bean
     public JwtTokenProvider jwtTokenProvider() {
